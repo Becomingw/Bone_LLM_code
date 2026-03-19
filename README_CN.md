@@ -27,8 +27,8 @@
 ## 实验 Workflow
 
 <p align="center">
-  <img src="figure_2.jpg" alt="Figure 2 workflow" width="49%" />
-  <img src="figure_3.jpg" alt="Figure 3 workflow details" width="49%" />
+  <img src="figure_2.jpg" alt="Figure 2 workflow" height="420" style="vertical-align: top; margin-right: 8px;" />
+  <img src="figure_3.jpg" alt="Figure 3 workflow details" height="420" style="vertical-align: top;" />
 </p>
 
 以上两图共同展示了本研究的实验 workflow 及关键评估环节。
