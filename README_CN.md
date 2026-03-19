@@ -1,84 +1,140 @@
-# 骨转移CT报告分析工具
+# Bone LLM Code
 
-[English version](README.md)
+[![论文 DOI](https://img.shields.io/badge/DOI-10.1186%2Fs12913--026--14350--3-blue)](https://doi.org/10.1186/s12913-026-14350-3)
+[![期刊](https://img.shields.io/badge/Journal-BMC%20Health%20Services%20Research-0f766e)](https://link.springer.com/article/10.1186/s12913-026-14350-3)
 
-## 项目简介
+对应论文的官方代码仓库：
 
-本项目是论文《Enhancing Bone Metastasis CT Report Analysis: A Comparison of Local and Proprietary LLMs for Data Security and Resource Efficiency》的官方测试代码实现。该工具旨在使用大型语言模型（LLMs）分析骨转移CT报告，提取关键信息如"是否骨折"、"转移部位"和"病理性骨折"等。
+**Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency**  
+*BMC Health Services Research*（发表于 2026 年 3 月 19 日）
 
-项目支持多种LLM模型的API调用，包括：
-- Ollama（本地部署）- Qwen2-72B\Gemma2-9B\WiNGPT2-9B\LLaMa2-72B
-- DeepSeek
-- OpenAI
-- Google Gemini
+## 项目概述
 
-## 功能
-- 支持多种LLM API接口，统一调用格式
-- 自动解析模型输出的JSON格式数据
-- 实现容错机制，确保获取有效结果
-- 命令行界面，方便批量处理报告（需要自行修改循环）
-- 可自定义系统提示词（System Prompt）
-- 数据安全性高，支持本地模型部署
+本仓库提供骨转移 CT 报告结构化信息抽取的推理脚本，使用大语言模型（LLMs）从自由文本中提取关键临床信息。
 
-## 安装说明
+当前流程重点输出 3 项结果：
+- 是否骨折
+- 转移部位
+- 病理性骨折
 
-1. 克隆仓库
-```
-git clone [仓库URL]
+代码采用 OpenAI 兼容接口，可同时支持专有云 API 与本地部署模型，适用于对隐私敏感的临床场景。
+
+## 论文链接
+
+- 文章页面：https://link.springer.com/article/10.1186/s12913-026-14350-3
+- DOI：https://doi.org/10.1186/s12913-026-14350-3
+
+## 核心图
+
+### 图 2：研究流程与模型评估管线
+
+![Figure 2](figure_2.jpg)
+
+### 图 3：不同 LLM 在任务上的比较结果
+
+![Figure 3](figure_3.jpg)
+
+## 仓库结构
+
+- `main.py`：命令行入口，用于单条 CT 报告推理
+- `utils_api.py`：API 调用封装、JSON 解析、重试与后处理工具
+- `Prompt.md`：中文系统提示词模板
+- `Prompt_en.md`：英文系统提示词模板
+
+## 快速开始
+
+### 1）克隆仓库
+
+```bash
+git clone https://github.com/Becomingw/Bone_LLM_code.git
 cd Bone_LLM_code
 ```
 
-2. 安装依赖
-```
+### 2）安装依赖
+
+```bash
 pip install openai
 ```
 
-## 使用方法
+### 3）配置 API Key（推荐）
 
-### 基本用法
-```
-python main.py --prompt "您的CT报告内容" [--model "模型名称"] [--base_url "API基础URL"] [--api_key "API密钥"]
-```
-
-### 参数说明
-- `--prompt`：必需参数，CT报告内容
-- `--model`：可选参数，默认为"deepseek-chat"，可选值包括"gpt-4o"、"gemini-1.5-pro"等
-- `--base_url`：可选参数，API基础URL
-  - DeepSeek: https://api.deepseek.com
-  - OpenAI: https://api.openai.com
-  - Gemini: https://generativelanguage.googleapis.com/v1beta/openai/
-  - Ollama: http://localhost:11434（本地部署）
-- `--api_key`：可选参数，API密钥
-- `--system_prompt_file`：可选参数，系统提示词文件路径，默认为"Prompt.md"
-
-### 示例
-```
-python main.py --prompt "1.左肺上叶、肺门旁肿块影，病灶累及纵隔，左肺上叶支气管闭塞，伴左肺叶膨胀不全伴支气管粘液潴留，恶性肿瘤可能大，建议CT增强检查。2.左侧胸腔积液，伴左肺大部膨胀不全。3.右肺下叶少许炎症，建议抗炎治疗后复查。4.右肺上叶钙化灶；右肺中叶、斜裂胸膜下小结节，较前相仿。5.少量心包积液。6.附见：左肾后方胸壁结节突起，转移待排。左侧第7、9后肋及邻近椎体附件骨质破坏，考虑转移，较老片明显进展；双侧肋骨多发骨折后改变。" --model "gemini-1.5-pro" --base_url "https://generativelanguage.googleapis.com/v1beta/openai/" --api_key "您的API密钥"
+```bash
+export LLM_API_KEY="your_api_key"
 ```
 
-## 项目文件说明
+### 4）运行推理
 
-- `main.py`：主程序，提供命令行接口
-- `utils_api.py`：API调用及数据处理工具
-- `Prompt.md`：系统提示词模板
-- `Prompt_en.md`：系统提示词模板,英文版本
+```bash
+python main.py \
+  --prompt "你的 CT 报告文本" \
+  --model "deepseek-chat" \
+  --base_url "https://api.deepseek.com" \
+  --system_prompt_file "Prompt.md"
+```
 
-## 数据安全与资源效率
+## 命令行参数
 
-本项目特别关注医疗数据的安全性和模型计算资源的高效利用：
+- `--prompt`（必填）：待分析的报告文本
+- `--model`（可选）：模型名称，默认 `deepseek-chat`
+- `--base_url`（可选）：API 地址，默认 `https://api.deepseek.com`
+- `--api_key`（可选）：API Key（不传则读取 `LLM_API_KEY`）
+- `--system_prompt_file`（可选）：系统提示词文件，默认 `Prompt.md`
 
-1. **数据安全**：支持使用Ollama等本地部署模型，确保敏感医疗数据不离开本地环境
-2. **资源效率**：提供多种模型选择，可根据需求平衡准确度和资源消耗
-3. **错误处理**：实现了`cycle_till_ok`机制，确保即使在网络不稳定情况下也能获取有效结果
+## 支持的后端（OpenAI 兼容）
 
-## 研究背景
+- DeepSeek：`https://api.deepseek.com`
+- OpenAI：`https://api.openai.com`
+- Gemini（OpenAI 兼容端点）：`https://generativelanguage.googleapis.com/v1beta/openai/`
+- Ollama（本地部署）：`http://localhost:11434`
 
-该项目源于对比本地部署LLM与专有云服务LLM在骨转移CT报告分析中的性能、安全性和资源效率的研究。通过标准化接口，研究人员可以方便地比较不同模型在相同任务上的表现。
+## 示例
 
-## 说明
-1. 本地运行模型需要自行部署ollama，我们在实验中使用了[ollama docker](https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image);
-2. 实验中所有本地模型均使用 [llama.cpp](https://github.com/ggml-org/llama.cpp) 进行了safetensor 转 GGUF 以及必要的量化，量化方法参照：https://github.com/ggml-org/llama.cpp/tree/master/examples/main
-3. 所有本地部署的开源模型权重均来自各模型官方huggingface仓库
-   
+```bash
+python main.py \
+  --prompt "左侧第7、9后肋及邻近椎体附件骨质破坏并进展，考虑转移；双侧肋骨多发骨折后改变。" \
+  --model "gemini-1.5-pro" \
+  --base_url "https://generativelanguage.googleapis.com/v1beta/openai/" \
+  --api_key "YOUR_API_KEY" \
+  --system_prompt_file "Prompt_en.md"
+```
+
+预期输出为包含以下字段的结果：
+- 是否骨折
+- 转移部位
+- 病理性骨折
+
+## 数据可用性与隐私
+
+本仓库仅提供代码，不包含临床原始数据。受患者隐私与机构规范限制，相关数据不公开。请以论文正式发表版本中的 Data Availability 声明为准。
+
+## 引用
+
+如果本仓库对你的研究有帮助，请引用：
+
+```text
+Li Z, Wang M, Liu A, Zeng Y, Yan B, Cao Z, Zhu J, Yang Y, Li Y.
+Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency.
+BMC Health Services Research. 2026.
+https://doi.org/10.1186/s12913-026-14350-3
+```
+
+BibTeX：
+
+```bibtex
+@article{li2026bone,
+  title   = {Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency},
+  author  = {Li, Zhuo and Wang, Mengfei and Liu, Ao and Zeng, Yao and Yan, Bicong and Cao, Zhongzheng and Zhu, Jinyu and Yang, Yulu and Li, Yuehua},
+  journal = {BMC Health Services Research},
+  year    = {2026},
+  doi     = {10.1186/s12913-026-14350-3},
+  url     = {https://doi.org/10.1186/s12913-026-14350-3}
+}
+```
+
 ## 致谢
-本项目参考了Ollama、llama.cpp、OpenAI、DeepSeek和Gemini官方的API示例，感谢这些社区的贡献对我们的研究提供了帮助。
+
+本实现采用 OpenAI 兼容 API 调用范式，并受益于 OpenAI、DeepSeek、Gemini、Ollama 与 llama.cpp 生态。
+
+## 许可
+
+当前仓库尚未包含 `LICENSE` 文件。如需复用，请先联系仓库维护者确认授权范围。

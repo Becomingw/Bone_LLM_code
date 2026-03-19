@@ -1,84 +1,140 @@
-# Bone Metastasis CT Report Analysis Tool
+# Bone LLM Code
 
-[中文版本🇨🇳](README_CN.md)
+[![Paper DOI](https://img.shields.io/badge/DOI-10.1186%2Fs12913--026--14350--3-blue)](https://doi.org/10.1186/s12913-026-14350-3)
+[![Journal](https://img.shields.io/badge/Journal-BMC%20Health%20Services%20Research-0f766e)](https://link.springer.com/article/10.1186/s12913-026-14350-3)
 
-## Project Introduction
+Official code repository for the paper:
 
-This project is the official test code implementation for the paper "Enhancing Bone Metastasis CT Report Analysis: A Comparison of Local and Proprietary LLMs for Data Security and Resource Efficiency." The tool is designed to analyze bone metastasis CT reports using Large Language Models (LLMs) to extract key information such as "presence of fracture," "metastasis site," and "pathological fracture."
+**Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency**  
+*BMC Health Services Research* (Published: March 19, 2026)
 
-The project supports API calls to various LLM models, including:
-- Ollama (locally deployed) - Qwen2-72B\Gemma2-9B\WiNGPT2-9B\LLaMa2-72B
-- DeepSeek
-- OpenAI
-- Google Gemini
+## Overview
 
-## Features
-- Support for multiple LLM API interfaces with a unified calling format
-- Automatic parsing of JSON-formatted data from model outputs
-- Error tolerance mechanism to ensure valid results
-- Command-line interface for convenient batch processing of reports (requires customizing loops)
-- Customizable system prompts
-- High data security with support for local model deployment
+This repository provides inference scripts for structured information extraction from free-text bone metastasis CT reports using large language models (LLMs).
 
-## Installation
+The workflow focuses on three clinically relevant outputs:
+- fracture status
+- metastasis site
+- pathological fracture status
 
-1. Clone the repository
-```
-git clone [repository URL]
+The code supports both proprietary APIs and locally deployable models through an OpenAI-compatible interface, making it suitable for privacy-sensitive clinical environments.
+
+## Paper
+
+- Article page: https://link.springer.com/article/10.1186/s12913-026-14350-3
+- DOI: https://doi.org/10.1186/s12913-026-14350-3
+
+## Core Figures
+
+### Figure 2. Study workflow and model evaluation pipeline
+
+![Figure 2](figure_2.jpg)
+
+### Figure 3. Comparative performance across LLMs and tasks
+
+![Figure 3](figure_3.jpg)
+
+## Repository Structure
+
+- `main.py`: CLI entry point for running model inference on a CT report
+- `utils_api.py`: API wrapper, JSON parsing, retry loop, and post-processing helpers
+- `Prompt.md`: Chinese system prompt template
+- `Prompt_en.md`: English system prompt template
+
+## Quick Start
+
+### 1) Clone
+
+```bash
+git clone https://github.com/Becomingw/Bone_LLM_code.git
 cd Bone_LLM_code
 ```
 
-2. Install dependencies
-```
+### 2) Install dependency
+
+```bash
 pip install openai
 ```
 
-## Usage
+### 3) Configure API key (recommended)
 
-### Basic Usage
-```
-python main.py --prompt "Your CT report content" [--model "model name"] [--base_url "API base URL"] [--api_key "API key"]
-```
-
-### Parameters
-- `--prompt`: Required parameter, CT report content
-- `--model`: Optional parameter, default is "deepseek-chat", options include "gpt-4o", "gemini-1.5-pro", etc.
-- `--base_url`: Optional parameter, API base URL
-  - DeepSeek: https://api.deepseek.com
-  - OpenAI: https://api.openai.com
-  - Gemini: https://generativelanguage.googleapis.com/v1beta/openai/
-  - Ollama: http://localhost:11434 (local deployment)
-- `--api_key`: Optional parameter, API key
-- `--system_prompt_file`: Optional parameter, path to system prompt file, default is "Prompt.md"
-
-### Example
-```
-python main.py --prompt "1.Left upper lobe and hilar mass shadow, lesion involving the mediastinum, left upper lobe bronchial obstruction, with left lobe atelectasis and bronchial mucus retention, high likelihood of malignant tumor, CT enhancement examination recommended. 2.Left pleural effusion with atelectasis of most of the left lung. 3.A small amount of inflammation in the right lower lobe, anti-inflammatory treatment and follow-up recommended. 4.Calcified focus in right upper lobe; small nodules in right middle lobe and oblique fissure subpleural area, similar to before. 5.Small amount of pericardial effusion. 6.Also noted: Nodular protrusion at the posterior wall of the left kidney, metastasis to be excluded. Bone destruction of the left 7th, 9th posterior ribs and adjacent vertebral attachments, considered metastasis, significantly progressed compared to previous films; multiple post-fracture changes in bilateral ribs." --model "gemini-1.5-pro" --base_url "https://generativelanguage.googleapis.com/v1beta/openai/" --api_key "Your API key"
+```bash
+export LLM_API_KEY="your_api_key"
 ```
 
-## Project Files Description
+### 4) Run inference
 
-- `main.py`: Main program providing command-line interface
-- `utils_api.py`: API call and data processing utilities
-- `Prompt.md`: System prompt template
-- `Prompt_en.md`: System prompt template, English version
+```bash
+python main.py \
+  --prompt "Your CT report text" \
+  --model "deepseek-chat" \
+  --base_url "https://api.deepseek.com" \
+  --system_prompt_file "Prompt.md"
+```
 
-## Data Security and Resource Efficiency
+## CLI Arguments
 
-This project pays special attention to the security of medical data and efficient use of model computing resources:
+- `--prompt` (required): report text to be analyzed
+- `--model` (optional): model name, default `deepseek-chat`
+- `--base_url` (optional): API endpoint, default `https://api.deepseek.com`
+- `--api_key` (optional): API key (if omitted, reads `LLM_API_KEY`)
+- `--system_prompt_file` (optional): prompt template file, default `Prompt.md`
 
-1. **Data Security**: Supports using locally deployed models like Ollama to ensure sensitive medical data doesn't leave the local environment
-2. **Resource Efficiency**: Provides multiple model options to balance accuracy and resource consumption as needed
-3. **Error Handling**: Implements a `cycle_till_ok` mechanism to ensure valid results even in unstable network conditions
+## Supported Backends (OpenAI-Compatible)
 
-## Research Background
+- DeepSeek: `https://api.deepseek.com`
+- OpenAI: `https://api.openai.com`
+- Gemini (OpenAI-compatible endpoint): `https://generativelanguage.googleapis.com/v1beta/openai/`
+- Ollama (local deployment): `http://localhost:11434`
 
-This project originated from research comparing the performance, security, and resource efficiency of locally deployed LLMs versus proprietary cloud service LLMs in bone metastasis CT report analysis. Through a standardized interface, researchers can easily compare the performance of different models on the same task.
+## Example
 
-## Notes
-1. Running local models requires deploying Ollama yourself. In our experiments, we used [Ollama Docker](https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image)
-2. All local models in the experiment were converted from safetensor to GGUF and quantized as necessary using [llama.cpp](https://github.com/ggml-org/llama.cpp). Quantization methods followed: https://github.com/ggml-org/llama.cpp/tree/master/examples/main
-3. All locally deployed open-source model weights were sourced from each model's official Hugging Face repository
-   
+```bash
+python main.py \
+  --prompt "Left 7th and 9th posterior ribs show bone destruction with progression, suggestive of metastasis. Multiple bilateral rib post-fracture changes." \
+  --model "gemini-1.5-pro" \
+  --base_url "https://generativelanguage.googleapis.com/v1beta/openai/" \
+  --api_key "YOUR_API_KEY" \
+  --system_prompt_file "Prompt_en.md"
+```
+
+Expected output is a tuple-like result containing:
+- fracture status
+- metastasis site
+- pathological fracture status
+
+## Data Availability and Privacy
+
+This repository contains code only. Clinical data are not public due to patient privacy and institutional restrictions. Please refer to the published article for the official data-availability statement.
+
+## Citation
+
+If this repository contributes to your work, please cite:
+
+```text
+Li Z, Wang M, Liu A, Zeng Y, Yan B, Cao Z, Zhu J, Yang Y, Li Y.
+Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency.
+BMC Health Services Research. 2026.
+https://doi.org/10.1186/s12913-026-14350-3
+```
+
+BibTeX:
+
+```bibtex
+@article{li2026bone,
+  title   = {Enhancing bone metastasis CT report analysis: a comparison of local and proprietary large language models for privacy and resource efficiency},
+  author  = {Li, Zhuo and Wang, Mengfei and Liu, Ao and Zeng, Yao and Yan, Bicong and Cao, Zhongzheng and Zhu, Jinyu and Yang, Yulu and Li, Yuehua},
+  journal = {BMC Health Services Research},
+  year    = {2026},
+  doi     = {10.1186/s12913-026-14350-3},
+  url     = {https://doi.org/10.1186/s12913-026-14350-3}
+}
+```
+
 ## Acknowledgments
-This project references API examples from Ollama, llama.cpp, OpenAI, DeepSeek, and Gemini. We thank these communities for their contributions that have supported our research. 
+
+This implementation uses OpenAI-compatible API calling patterns and draws on the ecosystems of OpenAI, DeepSeek, Gemini, Ollama, and llama.cpp.
+
+## License
+
+No license file is currently included in this repository. Please contact the repository owner for reuse permissions.
