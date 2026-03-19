@@ -27,11 +27,10 @@
 ## 实验 Workflow
 
 <p align="center">
-  <img src="figure_2.jpg" alt="Figure 2 workflow" height="420" style="vertical-align: top; margin-right: 8px;" />
-  <img src="figure_3.jpg" alt="Figure 3 workflow details" height="420" style="vertical-align: top;" />
+  <img src="figure_2.jpg" alt="Figure 2 workflow" width="70%" />
 </p>
 
-以上两图共同展示了本研究的实验 workflow 及关键评估环节。
+图 2 展示了本研究的实验 workflow。
 
 ## 仓库结构
 

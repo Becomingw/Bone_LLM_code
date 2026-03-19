@@ -27,11 +27,10 @@ The code supports both proprietary APIs and locally deployable models through an
 ## Experimental Workflow
 
 <p align="center">
-  <img src="figure_2.jpg" alt="Figure 2 workflow" height="420" style="vertical-align: top; margin-right: 8px;" />
-  <img src="figure_3.jpg" alt="Figure 3 workflow details" height="420" style="vertical-align: top;" />
+  <img src="figure_2.jpg" alt="Figure 2 workflow" width="70%" />
 </p>
 
-These two figures present the experimental workflow and its key evaluation components.
+Figure 2 presents the experimental workflow.
 
 ## Repository Structure
 
