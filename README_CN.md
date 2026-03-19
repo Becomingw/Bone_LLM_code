@@ -24,15 +24,14 @@
 - 文章页面：https://link.springer.com/article/10.1186/s12913-026-14350-3
 - DOI：https://doi.org/10.1186/s12913-026-14350-3
 
-## 核心图
+## 实验 Workflow
 
-### 图 2：研究流程与模型评估管线
+<p align="center">
+  <img src="figure_2.jpg" alt="Figure 2 workflow" width="49%" />
+  <img src="figure_3.jpg" alt="Figure 3 workflow details" width="49%" />
+</p>
 
-![Figure 2](figure_2.jpg)
-
-### 图 3：不同 LLM 在任务上的比较结果
-
-![Figure 3](figure_3.jpg)
+以上两图共同展示了本研究的实验 workflow 及关键评估环节。
 
 ## 仓库结构
 

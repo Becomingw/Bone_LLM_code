@@ -24,15 +24,14 @@ The code supports both proprietary APIs and locally deployable models through an
 - Article page: https://link.springer.com/article/10.1186/s12913-026-14350-3
 - DOI: https://doi.org/10.1186/s12913-026-14350-3
 
-## Core Figures
+## Experimental Workflow
 
-### Figure 2. Study workflow and model evaluation pipeline
+<p align="center">
+  <img src="figure_2.jpg" alt="Figure 2 workflow" width="49%" />
+  <img src="figure_3.jpg" alt="Figure 3 workflow details" width="49%" />
+</p>
 
-![Figure 2](figure_2.jpg)
-
-### Figure 3. Comparative performance across LLMs and tasks
-
-![Figure 3](figure_3.jpg)
+These two figures present the experimental workflow and its key evaluation components.
 
 ## Repository Structure
 
